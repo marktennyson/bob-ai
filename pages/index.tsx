@@ -1,11 +1,10 @@
 import { useState, useRef } from "react";
-import ChatHeader from "@/components/ChatHeader";
+import ChatHeader from "@/components/Header";
 import ChatInput from "@/components/ChatInput";
 import ChatMessages from "@/components/ChatMessages";
 import useSWR from "swr";
 import type { NextPage } from "next";
 import type { Message, Model } from "@/interfaces";
-import NavBar from "@/components/NavBar";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -13,9 +12,11 @@ const Home: NextPage = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [selectedModel, setSelectedModel] = useState("");
+  const [isPrinting, setIsPrinting] = useState<boolean>(false);
   const messagesEndRef = useRef<HTMLDivElement>(
     null
   ) as React.RefObject<HTMLDivElement>;
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const { data } = useSWR(
     `${process.env.NEXT_PUBLIC_BASE_OLLAMA_URL}/api/tags`,
@@ -36,6 +37,9 @@ const Home: NextPage = () => {
     setInput("");
 
     try {
+      const abortController = new AbortController();
+      abortControllerRef.current = abortController;
+
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_OLLAMA_URL}/api/chat`,
         {
@@ -46,6 +50,7 @@ const Home: NextPage = () => {
             messages: [...messages, userMessage],
             stream: true,
           }),
+          signal: abortController.signal,
         }
       );
 
@@ -55,10 +60,13 @@ const Home: NextPage = () => {
       let fullContent = "";
 
       setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
-
+      setIsPrinting(true);
       while (true) {
         const { done, value } = await reader!.read();
-        if (done) break;
+        if (done) {
+          setIsPrinting(false);
+          break;
+        }
 
         buffer += decoder.decode(value, { stream: true });
 
@@ -83,38 +91,70 @@ const Home: NextPage = () => {
           }
         }
       }
-    } catch (error) {
-      console.error("Streaming error:", error);
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: "Error: Could not get response" },
-      ]);
+    } catch (error: unknown) {
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        "name" in error &&
+        (error as { name?: string }).name === "AbortError"
+      ) {
+        setMessages((prev) => {
+          // Optionally, you can show a message that generation was stopped
+          const updated = [...prev];
+          if (
+            updated.length &&
+            updated[updated.length - 1].role === "assistant"
+          ) {
+            updated[updated.length - 1].content += "\n\n[Stopped by user]";
+          }
+          return updated;
+        });
+      } else {
+        console.error("Streaming error:", error);
+        setMessages((prev) => [
+          ...prev,
+          { role: "assistant", content: "Error: Could not get response" },
+        ]);
+      }
+      setIsPrinting(false);
+    } finally {
+      abortControllerRef.current = null;
     }
   };
 
+  const handleStop = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    setIsPrinting(false);
+  };
+
   return (
-    <>
-      <NavBar />
-      <div className="flex flex-col h-screen bg-gray-100 max-w-full">
-        <div className="flex flex-col flex-1 w-full max-w-6xl mx-auto shadow-lg bg-white rounded-lg my-0 md:my-6 md:mb-8 md:mt-6 p-2 sm:p-4 md:p-6 lg:p-8">
+    <div className="flex flex-col min-h-screen bg-muted">
+      <header className="w-full border-b border-border bg-background/80 backdrop-blur sticky top-0 z-10">
+        <div className="">
           <ChatHeader
             models={models}
             selectedModel={selectedModel}
             setSelectedModel={setSelectedModel}
           />
-          <div className="flex-1 overflow-y-auto">
-            <ChatMessages messages={messages} messagesEndRef={messagesEndRef} />
-          </div>
-          <div className="mt-2">
-            <ChatInput
-              input={input}
-              setInput={setInput}
-              handleSend={handleSend}
-            />
-          </div>
         </div>
-      </div>
-    </>
+      </header>
+      <main className="flex-1 w-full max-w-3xl mx-auto flex flex-col px-2 sm:px-4 md:px-6 py-2">
+        <ChatMessages messages={messages} messagesEndRef={messagesEndRef} />
+      </main>
+      <footer className="w-full bg-background/80 backdrop-blur border-t border-border sticky bottom-0 z-10">
+        <div className="max-w-3xl mx-auto px-4">
+          <ChatInput
+            input={input}
+            setInput={setInput}
+            handleSend={handleSend}
+            isPrinting={isPrinting}
+            handleStop={handleStop}
+          />
+        </div>
+      </footer>
+    </div>
   );
 };
 

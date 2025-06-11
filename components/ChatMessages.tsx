@@ -18,23 +18,25 @@ export default function ChatMessages({ messages, messagesEndRef }: Props) {
   }, [messages, messagesEndRef]);
 
   return (
-    <div className="flex-1 overflow-y-auto p-2 sm:p-4 md:p-6 bg-gray-50">
+    <div className="flex-1 flex flex-col gap-4 py-4 overflow-y-auto">
       {messages.map((msg, index) => (
         <div
           key={index}
-          className={`mb-2 sm:mb-3 md:mb-4 flex ${
+          className={`flex ${
             msg.role === "user" ? "justify-end" : "justify-start"
           }`}
         >
-          <span
-            className={`max-w-[80vw] sm:max-w-lg md:max-w-xl px-3 sm:px-4 py-2 sm:py-3 rounded-lg shadow text-sm sm:text-base whitespace-pre-wrap break-words ${
-              msg.role === "user"
-                ? "bg-blue-500 text-white"
-                : "bg-white text-gray-800"
-            }`}
+          <div
+            className={`relative max-w-[90vw] sm:max-w-2xl px-4 py-3 rounded-2xl text-base whitespace-pre-wrap break-words shadow-sm
+              ${
+                msg.role === "user"
+                  ? "bg-primary text-primary-foreground rounded-br-md"
+                  : "bg-background border border-border text-foreground rounded-bl-md"
+              }
+            `}
           >
             {msg.content}
-          </span>
+          </div>
         </div>
       ))}
       <div ref={messagesEndRef} />

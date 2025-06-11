@@ -1,6 +1,7 @@
 "use client";
 
 import { Send } from "lucide-react";
+import { Button } from "@heroui/react";
 
 interface Props {
   input: string;
@@ -20,12 +21,13 @@ export default function ChatInput({ input, setInput, handleSend }: Props) {
           placeholder="Type your message..."
           className="flex-1 p-2 sm:p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
         />
-        <button
-          onClick={handleSend}
+        <Button
+          onPress={handleSend}
+          variant="ghost"
           className="p-2 sm:p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center"
         >
           <Send size={20} />
-        </button>
+        </Button>
       </div>
     </div>
   );

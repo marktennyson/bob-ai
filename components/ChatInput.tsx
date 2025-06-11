@@ -41,7 +41,7 @@ export default function ChatInput({
           size="icon"
           disabled={isPrinting ? false : !input.trim()}
           type="button"
-          className={`absolute bottom-2 right-2 rounded-full shadow-md transition ${
+          className={`-mb-0.5 absolute bottom-2 right-2 rounded-full shadow-md transition ${
             isPrinting
               ? "bg-red-500 hover:bg-red-600 text-white"
               : "bg-blue-500 hover:bg-blue-600 text-white"

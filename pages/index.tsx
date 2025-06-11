@@ -35,7 +35,8 @@ const Home: NextPage = () => {
     const userMessage = { role: "user", content: input };
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
-
+    setIsPrinting(true);
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     try {
       const abortController = new AbortController();
       abortControllerRef.current = abortController;
@@ -60,7 +61,6 @@ const Home: NextPage = () => {
       let fullContent = "";
 
       setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
-      setIsPrinting(true);
       while (true) {
         const { done, value } = await reader!.read();
         if (done) {

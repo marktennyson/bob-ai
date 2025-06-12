@@ -1,6 +1,6 @@
 "use client";
 
-import { Send, Square } from "lucide-react"; // Add Square for stop icon
+import { Send, Square, Plus } from "lucide-react"; // Add Square for stop icon
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -31,20 +31,31 @@ export default function ChatInput({
               handleSend();
             }
           }}
-          placeholder="Type your message..."
-          className="flex-1 resize-none min-h-[48px] max-h-40 pr-12 rounded-2xl border border-gray-200 bg-white shadow focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition text-base"
+          placeholder="Ask anything."
+          autoFocus
+          className="flex-1 resize-none min-h-22 max-h-40 pr-12 rounded-2xl border border-gray-200 bg-white shadow focus:ring-1 transition text-base w-full"
           rows={1}
           disabled={isPrinting}
         />
+        {/* Plus button at bottom left */}
+        <Button
+          type="button"
+          size="icon"
+          disabled
+          className="absolute left-2 bottom-2 rounded-full shadow-md transition bg-transparent hover:bg-gray-700 cursor-pointer"
+        >
+          <Plus className="text-white" />
+        </Button>
+        {/* Send/Stop button at bottom right */}
         <Button
           onClick={isPrinting ? handleStop : handleSend}
           size="icon"
           disabled={isPrinting ? false : !input.trim()}
           type="button"
-          className={`-mb-0.5 absolute bottom-2 right-2 rounded-full shadow-md transition ${
+          className={`absolute right-2 bottom-2 -mb-0.5 rounded-full shadow-md transition cursor-pointer ${
             isPrinting
               ? "bg-red-500 hover:bg-red-600 text-white"
-              : "bg-blue-500 hover:bg-blue-600 text-white"
+              : "bg-green-500 hover:bg-green-600 text-white"
           }`}
           aria-label={isPrinting ? "Stop generating" : "Send message"}
         >

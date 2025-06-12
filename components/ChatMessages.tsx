@@ -5,6 +5,7 @@ import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import oneDark from "react-syntax-highlighter/dist/cjs/styles/prism/one-dark";
 import { Copy, Check } from "lucide-react"; // Changed to lucide-react
+import { Button } from "./ui/button";
 
 interface Message {
   role: string;
@@ -40,14 +41,19 @@ function CodeBlock({
 
   return !inline && match ? (
     <div className="relative group">
-      <button
+      <Button
         onClick={handleCopy}
-        className="absolute top-2 right-2 z-10 p-1 rounded bg-background hover:bg-muted transition"
+        size={"icon"}
+        className="absolute top-2 right-2 p-1 rounded bg-transparent hover:bg-muted transition"
         aria-label="Copy code"
         type="button"
       >
-        {copied ? <Check className="text-green-500" /> : <Copy />}
-      </button>
+        {copied ? (
+          <Check className="text-green-500" />
+        ) : (
+          <Copy className="text-white" />
+        )}
+      </Button>
       <SyntaxHighlighter
         style={oneDark}
         language={match[1]}
@@ -83,7 +89,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
           }`}
         >
           <div
-            className={`relative max-w-[90vw] sm:max-w-2xl px-4 py-3 rounded-2xl text-base whitespace-pre-wrap break-words shadow-sm
+            className={`relative max-w-[90vw] sm:max-w-2xl xl:max-w-4xl 2xl:max-w-5xl px-4 py-3 rounded-2xl text-base whitespace-pre-wrap break-words shadow-sm
               ${
                 msg.role === "user"
                   ? "bg-gray-950 text-foreground rounded-br-md"

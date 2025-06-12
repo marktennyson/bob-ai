@@ -4,6 +4,6 @@ export interface Message {
 }
 
 export interface Model {
-  id?: string;
+  id: string;
   name: string;
 }

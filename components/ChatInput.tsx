@@ -20,7 +20,7 @@ export default function ChatInput({
   handleStop,
 }: Props) {
   return (
-    <div className="p-2 sm:p-4 bg-gradient-to-t from-white via-white/80 to-transparent border-t">
+    <div className="p-2 sm:p-4">
       <div className="relative max-w-full sm:max-w-2xl md:max-w-3xl mx-auto">
         <Textarea
           value={input}

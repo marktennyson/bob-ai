@@ -8,11 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "./ui/button";
 import { ChevronDown } from "lucide-react";
-
-interface Model {
-  id: string;
-  name: string;
-}
+import type { Model } from "@/interfaces";
 
 interface Props {
   models: Model[];
@@ -52,7 +48,7 @@ export default function ChatHeader({
                 className={
                   selectedModel === model.id
                     ? "bg-blue-50 text-blue-700 font-semibold"
-                    : "hover:bg-gray-100"
+                    : "hover:bg-gray-100 text-black"
                 }
               >
                 {model.name}

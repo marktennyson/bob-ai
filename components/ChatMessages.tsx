@@ -11,7 +11,7 @@ interface Message {
   content: string;
 }
 
-interface Props {
+interface ChatMessagesProps {
   messages: Message[];
   messagesEndRef: React.RefObject<HTMLDivElement>;
 }
@@ -64,7 +64,10 @@ function CodeBlock({
   );
 }
 
-export default function ChatMessages({ messages, messagesEndRef }: Props) {
+const ChatMessages: React.FC<ChatMessagesProps> = ({
+  messages,
+  messagesEndRef,
+}) => {
   // Scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -83,8 +86,8 @@ export default function ChatMessages({ messages, messagesEndRef }: Props) {
             className={`relative max-w-[90vw] sm:max-w-2xl px-4 py-3 rounded-2xl text-base whitespace-pre-wrap break-words shadow-sm
               ${
                 msg.role === "user"
-                  ? "bg-primary text-primary-foreground rounded-br-md"
-                  : "bg-background border border-border text-foreground rounded-bl-md"
+                  ? "bg-gray-950 text-foreground rounded-br-md"
+                  : "bg-slate-950 border border-border text-foreground rounded-bl-md"
               }
             `}
           >
@@ -101,4 +104,7 @@ export default function ChatMessages({ messages, messagesEndRef }: Props) {
       <div ref={messagesEndRef} />
     </div>
   );
-}
+};
+
+export default ChatMessages;
+// This component renders chat messages with syntax highlighting and copy functionality

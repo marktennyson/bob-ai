@@ -130,7 +130,7 @@ const Home: NextPage = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-muted">
+    <div className="flex flex-col min-h-screen bg-muted dark:bg-none">
       <header className="w-full border-b border-border bg-background/80 backdrop-blur sticky top-0 z-10">
         <div className="">
           <ChatHeader

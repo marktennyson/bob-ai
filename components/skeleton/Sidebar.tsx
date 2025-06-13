@@ -36,7 +36,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
         flex flex-col h-full bg-background border-r border-border transition-all duration-200
         fixed z-30 top-0 left-0
         ${sidebarOpen ? "w-64" : "w-0"}
-        md:static md:w-64
+        md:w-64
         overflow-hidden
       `}
       style={{ minWidth: sidebarOpen ? "16rem" : "0" }}

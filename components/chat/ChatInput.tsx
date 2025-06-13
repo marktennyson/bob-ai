@@ -33,7 +33,7 @@ export default function ChatInput({
           }}
           placeholder="Ask anything."
           autoFocus
-          className="flex-1 resize-none min-h-22 max-h-40 pr-12 rounded-2xl bg-white shadow transition text-base w-full"
+          className="flex-1 resize-none min-h-22 max-h-40 pr-12 rounded-2xl bg-white shadow transition text-base w-full backdrop-blur"
           rows={1}
           disabled={isPrinting}
         />

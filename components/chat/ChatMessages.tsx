@@ -5,7 +5,7 @@ import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import oneDark from "react-syntax-highlighter/dist/cjs/styles/prism/one-dark";
 import { Copy, Check } from "lucide-react"; // Changed to lucide-react
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 
 interface Message {
   role: string;

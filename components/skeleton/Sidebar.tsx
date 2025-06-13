@@ -42,8 +42,8 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
       style={{ minWidth: sidebarOpen ? "16rem" : "0" }}
     >
       {/* Header with close button on mobile */}
-      <div className="flex items-center justify-between p-4 border-b border-zinc-700 text-xl font-bold">
-        <span>ChatGPT</span>
+      <div className="flex items-center justify-between p-4 text-xl font-bold">
+        <span>BOB AI</span>
         <button
           className="md:hidden p-1 rounded hover:bg-accent"
           onClick={() => setSidebarOpen(false)}
@@ -87,7 +87,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
       </ScrollArea>
 
       {/* Footer */}
-      <div className="p-4 border-t border-zinc-700 text-sm text-zinc-400">
+      <div className="p-4 text-sm text-zinc-400">
         Logged in as: <span className="text-white">you@example.com</span>
       </div>
     </aside>

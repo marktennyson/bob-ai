@@ -1,11 +1,13 @@
-import { useState, useRef } from "react";
-import ChatHeader from "@/components/Header";
-import ChatInput from "@/components/ChatInput";
-import ChatMessages from "@/components/ChatMessages";
+import { useState, useRef, useEffect } from "react";
+import ChatHeader from "@/components/skeleton/Header";
+import ChatInput from "@/components/chat/ChatInput";
+import ChatMessages from "@/components/chat/ChatMessages";
 import useSWR from "swr";
 import type { NextPage } from "next";
 import type { Message, Model } from "@/interfaces";
-import Sidebar from "@/components/Sidebar";
+import Sidebar from "@/components/skeleton/Sidebar";
+import { Button } from "@/components/ui/button";
+import { Menu, X } from "lucide-react";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -14,19 +16,23 @@ const Home: NextPage = () => {
   const [input, setInput] = useState("");
   const [selectedModel, setSelectedModel] = useState("");
   const [isPrinting, setIsPrinting] = useState<boolean>(false);
-  const [sidebarOpen, setSidebarOpen] = useState(true); // Sidebar toggle state
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
   const messagesEndRef = useRef<HTMLDivElement>(
     null
   ) as React.RefObject<HTMLDivElement>;
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  const { data } = useSWR(
+  const { data: modelsData } = useSWR(
     `${process.env.NEXT_PUBLIC_BASE_OLLAMA_URL}/api/tags`,
     fetcher
   );
 
   const models =
-    data?.models?.map((m: Model) => ({ id: m.name, name: m.name })) || [];
+    modelsData?.models?.map((m: Model) => ({
+      id: m.name,
+      name: m.name.split(":")[0],
+    })) || [];
 
   if (!selectedModel && models.length > 0) {
     setSelectedModel(models[0].id);
@@ -131,6 +137,20 @@ const Home: NextPage = () => {
     setIsPrinting(false);
   };
 
+  // Auto-hide sidebar on mobile
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setSidebarOpen(false);
+      } else {
+        setSidebarOpen(true);
+      }
+    };
+    handleResize(); // Set initial state
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <div className="flex min-h-screen bg-muted dark:bg-none">
       {/* Sidebar */}
@@ -148,38 +168,18 @@ const Home: NextPage = () => {
           sidebarOpen ? "md" : "md"
         }`}
       >
-        <header className="w-full border-b border-border bg-background/80 backdrop-blur sticky top-0 z-20 flex items-center">
-          {/* Sidebar toggle button */}
-          <button
-            className="p-2 m-2 rounded hover:bg-accent focus:outline-none focus:ring-2 focus:ring-accent md:hidden"
+        <header className="w-full border-b border-border backdrop-blur sticky top-0 z-20 flex items-center">
+          <Button
+            className="p-2 m-2 rounded hover:bg-accent focus:outline-none focus:ring-2 focus:ring-accent md:hidden bg-transparent"
             onClick={() => setSidebarOpen((open) => !open)}
             aria-label={sidebarOpen ? "Hide sidebar" : "Show sidebar"}
           >
-            {/* Hamburger icon */}
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              viewBox="0 0 24 24"
-            >
-              {sidebarOpen ? (
-                // X icon
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              ) : (
-                // Hamburger icon
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              )}
-            </svg>
-          </button>
+            {sidebarOpen ? (
+              <X size={32} />
+            ) : (
+              <Menu size={32} className="text-white brightness-250" />
+            )}
+          </Button>
           <div className="flex-1">
             <ChatHeader
               models={models}
@@ -188,13 +188,21 @@ const Home: NextPage = () => {
             />
           </div>
         </header>
-        <main className="flex-1 w-full max-w-3xl xl:max-w-5xl 2xl:max-w-7xl mx-auto flex flex-col px-2 sm:px-4 md:px-6 py-2">
-          <ChatMessages messages={messages} messagesEndRef={messagesEndRef} />
-        </main>
+        {messages.length > 0 && (
+          <main
+            id="chat-messages"
+            className="flex-1 w-full max-w-3xl xl:max-w-5xl 2xl:max-w-7xl mx-auto flex flex-col px-2 sm:px-4 md:px-6 py-2"
+          >
+            <ChatMessages messages={messages} messagesEndRef={messagesEndRef} />
+          </main>
+        )}
         {/* Conditional rendering for ChatInput position */}
         {messages.length === 0 ? (
           // Centered ChatInput when no messages
-          <div className="flex flex-1 items-center justify-center absolute inset-0 pointer-events-none z-20">
+          <div
+            id="chat-input"
+            className="flex flex-1 items-center justify-center inset-0 pointer-events-none z-20"
+          >
             <div className="w-full max-w-2xl pointer-events-auto">
               <ChatInput
                 input={input}
@@ -207,7 +215,7 @@ const Home: NextPage = () => {
           </div>
         ) : (
           // Footer ChatInput when messages exist
-          <footer className="w-full bg-background/80 backdrop-blur border-t border-border sticky bottom-0 z-10">
+          <footer className="w-full backdrop-blur border-t border-border sticky bottom-0 z-10">
             <div className="max-w-3xl mx-auto px-4">
               <ChatInput
                 input={input}
@@ -225,14 +233,3 @@ const Home: NextPage = () => {
 };
 
 export default Home;
-// export const dynamic = "force-dynamic"; // Ensure this page is always fresh
-// export const revalidate = 0; // Disable static generation for this page
-// export const fetchCache = "force-no-store"; // Disable caching for this page
-// export const runtime = "edge"; // Use edge runtime for better performance
-// export const preferredRegion = "auto"; // Automatically select the best region
-// export const tags = ["chat", "ollama", "ai", "assistant"]; // Tags for this page
-// export const metadata = {
-//   title: "BOB - Ollama AI Chat",
-//   keywords: ["Ollama", "AI", "Chat", "Assistant", "Real-time"],
-//   description: "A real-time chat interface powered by Ollama AI.",
-// }

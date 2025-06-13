@@ -33,7 +33,7 @@ export default function ChatInput({
           }}
           placeholder="Ask anything."
           autoFocus
-          className="flex-1 resize-none min-h-22 max-h-40 pr-12 rounded-2xl border border-gray-200 bg-white shadow focus:ring-1 transition text-base w-full"
+          className="flex-1 resize-none min-h-22 max-h-40 pr-12 rounded-2xl bg-white shadow transition text-base w-full"
           rows={1}
           disabled={isPrinting}
         />
@@ -41,8 +41,8 @@ export default function ChatInput({
         <Button
           type="button"
           size="icon"
-          disabled
-          className="absolute left-2 bottom-2 rounded-full shadow-md transition bg-transparent hover:bg-gray-700 cursor-pointer"
+          // disabled
+          className="absolute left-2 bottom-2 rounded-full shadow-md transition bg-transparent hover:bg-accent cursor-pointer"
         >
           <Plus className="text-white" />
         </Button>

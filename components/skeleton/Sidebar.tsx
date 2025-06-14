@@ -33,7 +33,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
   return (
     <aside
       className={`
-        flex flex-col h-full bg-background border-r border-border transition-all duration-200
+        flex flex-col h-full bg-sidebar border-r border-border transition-all duration-200
         fixed z-30 top-0 left-0
         ${sidebarOpen ? "w-64" : "w-0"}
         md:w-64

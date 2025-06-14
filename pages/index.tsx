@@ -191,7 +191,7 @@ const Home: NextPage = () => {
         {messages.length > 0 && (
           <main
             id="chat-messages"
-            className="flex-1 w-full max-w-3xl xl:max-w-5xl 2xl:max-w-7xl mx-auto flex flex-col px-2 sm:px-4 md:px-6 py-2 overflow-y-auto"
+            className="flex-1 mx-auto flex flex-col px-2 sm:px-4 md:px-6 py-2 overflow-y-auto"
             style={{ minHeight: 0 }}
           >
             <ChatMessages messages={messages} messagesEndRef={messagesEndRef} />
@@ -216,8 +216,8 @@ const Home: NextPage = () => {
           </div>
         ) : (
           // Footer ChatInput when messages exist
-          <footer className="w-full border-t border-border sticky bottom-0 z-10 bg-background">
-            <div className="max-w-3xl mx-auto px-4">
+          <footer className="w-full sticky bottom-0 z-10 bg-muted">
+            <div className="max-w-[90vw] sm:max-w-2xl xl:max-w-4xl mx-auto pb-2.5">
               <ChatInput
                 input={input}
                 setInput={setInput}

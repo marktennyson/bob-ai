@@ -85,15 +85,15 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
         <div
           key={index}
           className={`flex ${
-            msg.role === "user" ? "justify-end" : "justify-start"
+            msg.role === "user" ? "justify-end" : "justify-center"
           }`}
         >
           <div
-            className={`relative max-w-[90vw] sm:max-w-2xl xl:max-w-4xl 2xl:max-w-5xl px-4 py-3 rounded-2xl text-base whitespace-pre-wrap break-words shadow-sm
+            className={`relative max-w-[90vw] sm:max-w-2xl xl:max-w-4xl px-4 py-3 rounded-2xl text-base whitespace-pre-wrap break-words
               ${
                 msg.role === "user"
-                  ? "bg-gray-950 text-foreground rounded-br-md"
-                  : "bg-slate-950 border border-border text-foreground rounded-bl-md"
+                  ? "bg-message-surface text-foreground rounded-br-md shadow-sm"
+                  : "text-foreground rounded-bl-md"
               }
             `}
           >

@@ -20,8 +20,8 @@ export default function ChatInput({
   handleStop,
 }: Props) {
   return (
-    <div className="p-2 sm:p-4">
-      <div className="relative max-w-full sm:max-w-2xl md:max-w-3xl mx-auto">
+    <div className="px-2 sm:px-4">
+      <div className="relative mx-auto">
         <Textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}

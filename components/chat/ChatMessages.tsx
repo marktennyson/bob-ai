@@ -89,11 +89,11 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
           }`}
         >
           <div
-            className={`relative max-w-[90vw] sm:max-w-2xl xl:max-w-4xl px-4 py-3 rounded-2xl text-base whitespace-pre-wrap break-words
+            className={`relative px-4 py-3 rounded-2xl text-base whitespace-pre-wrap break-words
               ${
                 msg.role === "user"
-                  ? "bg-message-surface text-foreground rounded-br-md shadow-sm"
-                  : "text-foreground rounded-bl-md"
+                  ? "bg-message-surface text-foreground rounded-br-md shadow-sm  max-w-[90vw] sm:max-w-2xl xl:max-w-4xl"
+                  : "text-foreground rounded-bl-md w-[90vw] sm:w-2xl xl:w-4xl"
               }
             `}
           >

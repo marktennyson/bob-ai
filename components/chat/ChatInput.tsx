@@ -42,7 +42,7 @@ export default function ChatInput({
           type="button"
           size="icon"
           // disabled
-          className="absolute left-2 bottom-2 rounded-full shadow-md transition bg-transparent hover:bg-accent cursor-pointer"
+          className="absolute left-2 bottom-2 rounded-full transition bg-transparent hover:bg-muted cursor-pointer"
         >
           <Plus className="text-white" />
         </Button>

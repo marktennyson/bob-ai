@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useRef, useEffect } from "react";
 import ChatHeader from "@/components/skeleton/Header";
 import ChatInput from "@/components/chat/ChatInput";

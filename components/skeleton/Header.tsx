@@ -10,7 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "../ui/button";
 import { ChevronDown } from "lucide-react";
 import { LogOut, User, Settings } from "lucide-react";
-import type { Model } from "@/interfaces";
+import type { Model } from "@/lib/interfaces";
 
 interface HeaderProps {
   models: Model[];

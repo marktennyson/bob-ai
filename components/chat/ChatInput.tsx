@@ -1,8 +1,9 @@
 "use client";
 
-import { Send, Square, Plus } from "lucide-react"; // Add Square for stop icon
+import { Send, Square } from "lucide-react"; // Add Square for stop icon
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import VoiceInput from "./VoiceInput";
 
 interface Props {
   input: string;
@@ -38,14 +39,20 @@ export default function ChatInput({
           disabled={isPrinting}
         />
         {/* Plus button at bottom left */}
-        <Button
+        {/* <Button
           type="button"
           size="icon"
           // disabled
           className="absolute left-2 bottom-2 rounded-full transition bg-transparent hover:bg-muted cursor-pointer"
         >
           <Plus className="text-white" />
-        </Button>
+        </Button> */}
+        <VoiceInput
+          onResult={(text) => {
+            setInput(text);
+            handleSend();
+          }}
+        />
         {/* Send/Stop button at bottom right */}
         <Button
           onClick={isPrinting ? handleStop : handleSend}

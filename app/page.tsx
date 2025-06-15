@@ -6,10 +6,11 @@ import ChatInput from "@/components/chat/ChatInput";
 import ChatMessages from "@/components/chat/ChatMessages";
 import useSWR from "swr";
 import type { NextPage } from "next";
-import type { Message, Model } from "@/interfaces";
+import type { Message, Model } from "@/lib/interfaces";
 import Sidebar from "@/components/skeleton/Sidebar";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import { speakBuffered, cancelSpeech } from "@/lib/utils";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -96,6 +97,7 @@ const Home: NextPage = () => {
               updated[updated.length - 1].content = fullContent;
               return updated;
             });
+            speakBuffered(fullContent); // Speak the streamed content
           } catch (e) {
             console.warn("Failed to parse stream chunk:", line, e);
           }
@@ -136,6 +138,7 @@ const Home: NextPage = () => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
     }
+    cancelSpeech(); // Stop any ongoing speech
     setIsPrinting(false);
   };
 
@@ -152,6 +155,15 @@ const Home: NextPage = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  // useEffect(() => {
+  //   if (!isPrinting && messages.length > 0) {
+  //     const last = messages[messages.length - 1];
+  //     if (last.role === "assistant" && last.content.trim() !== "") {
+  //       speak(last.content);
+  //     }
+  //   }
+  // }, [isPrinting, messages]);
 
   return (
     <div className="flex min-h-screen bg-muted dark:bg-none">

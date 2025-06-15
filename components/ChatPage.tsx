@@ -10,7 +10,8 @@ import type { Message, Model } from "@/interfaces";
 import Sidebar from "@/components/skeleton/Sidebar";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
-import type { UserSession } from "@/interfaces"; // Adjust import based on your project structure
+import type { UserSession } from "@/interfaces";
+import { getSession } from "next-auth/react";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -55,12 +56,16 @@ const ChatPage: React.FC<ChatPageProps> = ({ userSession }) => {
     try {
       const abortController = new AbortController();
       abortControllerRef.current = abortController;
-
+      const session = await getSession();
+      const token = session?.accessToken;
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_OLLAMA_URL}/api/chat`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
           body: JSON.stringify({
             model: selectedModel,
             messages: [...messages, userMessage],

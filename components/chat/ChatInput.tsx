@@ -41,7 +41,7 @@ export default function ChatInput({
         <Button
           type="button"
           size="icon"
-          // disabled
+          disabled
           className="absolute left-2 bottom-2 rounded-full transition bg-transparent hover:bg-muted cursor-pointer"
         >
           <Plus className="text-white" />

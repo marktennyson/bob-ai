@@ -3,7 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { PlusIcon, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import type { UserSession } from "@/interfaces"; // Adjust import based on your project structure
 
 interface ChatItem {
   id: string;
@@ -13,9 +14,14 @@ interface ChatItem {
 interface SidebarProps {
   sidebarOpen: boolean;
   setSidebarOpen: (open: boolean) => void;
+  userSession: UserSession; // Adjust based on your session type
 }
 
-export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
+export default function Sidebar({
+  sidebarOpen,
+  setSidebarOpen,
+  userSession,
+}: SidebarProps) {
   const [chats, setChats] = useState<ChatItem[]>([
     { id: "1", title: "Trip plan with AI" },
     { id: "2", title: "Website feedback" },
@@ -29,6 +35,19 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
     };
     setChats([newChat, ...chats]);
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setSidebarOpen(false);
+      } else {
+        setSidebarOpen(true);
+      }
+    };
+    handleResize(); // Set initial state
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [setSidebarOpen]);
 
   return (
     <aside
@@ -88,7 +107,8 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
 
       {/* Footer */}
       <div className="p-4 text-sm text-zinc-400">
-        Logged in as: <span className="text-white">you@example.com</span>
+        Logged in as:{" "}
+        <span className="text-white">{userSession.user.email}</span>
       </div>
     </aside>
   );

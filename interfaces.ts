@@ -5,5 +5,14 @@ export interface Message {
 
 export interface Model {
   id: string;
-  name: string;
+  digest?: string;
+  model: string;
+}
+
+export interface UserSession {
+  user: {
+    name: string;
+    email: string;
+    image: string;
+  };
 }

@@ -8,20 +8,23 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "../ui/button";
-import { ChevronDown } from "lucide-react";
-import { LogOut, User, Settings } from "lucide-react";
+import { LogOut, User, Settings, ChevronDown } from "lucide-react";
 import type { Model } from "@/interfaces";
+import type { UserSession } from "@/interfaces";
+import { signOut } from "next-auth/react";
 
 interface HeaderProps {
   models: Model[];
   selectedModel: string;
   setSelectedModel: (id: string) => void;
+  userSession: UserSession; // Optional user session prop
 }
 
 const ChatHeader: React.FC<HeaderProps> = ({
   models,
   selectedModel,
   setSelectedModel,
+  userSession,
 }) => {
   return (
     <div className="px-2 py-1 sm:p-4 relative flex items-start justify-between gap-2 sm:gap-0">
@@ -77,12 +80,19 @@ const ChatHeader: React.FC<HeaderProps> = ({
             >
               <Avatar className="h-9 w-9 shadow-sm select-none cursor-pointer">
                 <AvatarImage
-                  src="https://pypi-camo.freetls.fastly.net/..."
+                  src={userSession?.user?.image}
                   alt="@evilrabbit"
                   className="select-none"
                 />
                 <AvatarFallback className="select-none bg-blue-500">
-                  AS
+                  {userSession?.user?.name
+                    ?.split("")[0]
+                    .charAt(0)
+                    .toUpperCase() || "B"}{" "}
+                  {userSession?.user?.name
+                    ?.split("")[1]
+                    .charAt(0)
+                    .toUpperCase() || "B"}
                 </AvatarFallback>
               </Avatar>
             </Button>
@@ -94,7 +104,10 @@ const ChatHeader: React.FC<HeaderProps> = ({
             <DropdownMenuItem className="gap-2 text-white hover:bg-muted cursor-pointer">
               <Settings size={16} /> Settings
             </DropdownMenuItem>
-            <DropdownMenuItem className="gap-2 text-red-600 hover:bg-red-500/10 cursor-pointer">
+            <DropdownMenuItem
+              className="gap-2 text-red-600 hover:!bg-red-500/10 hover:!text-red-800 hover:brightness-200 cursor-pointer"
+              onClick={() => signOut()}
+            >
               <LogOut size={16} /> Log out
             </DropdownMenuItem>
           </DropdownMenuContent>

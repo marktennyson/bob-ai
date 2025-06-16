@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useRef, useEffect } from "react";
 import { Send, Square, Plus } from "lucide-react"; // Add Square for stop icon
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -19,10 +20,20 @@ export default function ChatInput({
   isPrinting = false,
   handleStop,
 }: Props) {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Focus textarea when isPrinting changes from true to false
+  useEffect(() => {
+    if (!isPrinting) {
+      textareaRef.current?.focus();
+    }
+  }, [isPrinting]);
+
   return (
     <div className="px-2 sm:px-4">
       <div className="relative mx-auto">
         <Textarea
+          ref={textareaRef}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => {
@@ -32,7 +43,7 @@ export default function ChatInput({
             }
           }}
           placeholder="Ask anything."
-          autoFocus
+          autoFocus={true}
           className="flex-1 resize-none min-h-22 max-h-40 pr-12 rounded-2xl bg-white shadow transition text-base w-full backdrop-blur"
           rows={1}
           disabled={isPrinting}

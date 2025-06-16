@@ -1,5 +1,6 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GitHubProvider from "next-auth/providers/github";
+import jwt from "jsonwebtoken";
 
 // Extend the Session type to include accessToken
 declare module "next-auth" {
@@ -19,15 +20,39 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    async jwt({ token, account }) {
-      // Persist the GitHub access_token to the token right after sign in
-      if (account) {
-        token.accessToken = account.access_token;
+    async jwt({ token, account, user, profile }) {
+      // Generate a custom JWT access token after sign in
+      if (account && user) {
+        const payload = {
+          sub: user.id,
+          email: user.email || profile?.email,
+          name: user.name || profile?.name,
+          provider: account.provider,
+        };
+        token.accessToken = jwt.sign(payload, process.env.NEXTAUTH_SECRET!, {
+          expiresIn: "1h",
+        });
+        // Call backend API to store user data
+        try {
+          await fetch(
+            process.env.NEXT_PUBLIC_BASE_OLLAMA_URL + "/api/save-user",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token.accessToken}`,
+              },
+              body: JSON.stringify(payload),
+            }
+          );
+        } catch (err) {
+          console.error("Failed to store user data:", err);
+        }
       }
       return token;
     },
     async session({ session, token }) {
-      // Send accessToken to the client
+      // Send custom accessToken to the client
       session.accessToken =
         typeof token.accessToken === "string" ? token.accessToken : undefined;
       return session;

@@ -1,5 +1,5 @@
 "use client";
-
+import React from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -38,9 +38,8 @@ const ChatHeader: React.FC<HeaderProps> = ({
               aria-label="Select model"
             >
               <span className="truncate text-foreground font-medium flex-1 text-left">
-                {models
-                  .find((m) => m.id === selectedModel)
-                  ?.name.toUpperCase() || "Select Model"}
+                {models.find((m) => m.id === selectedModel)?.name ||
+                  "Select Model"}
               </span>
               <ChevronDown size={18} className="text-muted-foreground ml-1" />
             </Button>
@@ -59,7 +58,7 @@ const ChatHeader: React.FC<HeaderProps> = ({
                     : "hover:bg-muted text-foreground cursor-pointer rounded"
                 }
               >
-                <span className="truncate">{model.name.toUpperCase()}</span>
+                <span className="truncate">{model.name}</span>
                 {selectedModel === model.id && (
                   <span className="ml-auto text-xs text-primary font-bold">
                     ✓

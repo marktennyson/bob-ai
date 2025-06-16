@@ -38,8 +38,9 @@ const ChatPage: React.FC<ChatPageProps> = ({ userSession }) => {
 
   const models =
     modelsData?.models?.map((m: Model) => ({
-      id: m.model,
-      name: m.model.split(":")[0],
+      id: m.id,
+      digest: m.digest,
+      name: m.name,
     })) || [];
 
   if (!selectedModel && models.length > 0) {

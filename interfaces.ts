@@ -5,8 +5,8 @@ export interface Message {
 
 export interface Model {
   id: string;
-  digest?: string;
-  model: string;
+  digest: string;
+  name: string;
 }
 
 export interface UserSession {
